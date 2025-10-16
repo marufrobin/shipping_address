@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shipping_address/src/feature/shopping/bloc/add_address_bloc/add_address_bloc.dart';
+import 'package:shipping_address/src/model/city_response_model.dart';
+import 'package:shipping_address/src/model/country_response_model.dart';
 
 class AddShippingAddressScreen extends StatefulWidget {
   const AddShippingAddressScreen({super.key});
@@ -19,24 +23,24 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
   final _buildingNameController = TextEditingController();
   final _postCodeController = TextEditingController();
 
-  String? _selectedCity;
-  String? _selectedCountry;
-  String? _selectedRegion;
+  CityModel? _selectedCity;
+  CountryModel? _selectedCountry;
+  CountryModel? _selectedRegion;
   bool _useExistingAddress = true;
 
-  final List<String> _cities = [
-    'Dhaka',
-    'Chittagong',
-    'Sylhet',
-    'Rajshahi',
-    'Khulna',
-  ];
-  final List<String> _countries = ['Bangladesh', 'India', 'Pakistan', 'Nepal'];
-  final List<String> _regions = [
-    'Dhaka Division',
-    'Chittagong Division',
-    'Sylhet Division',
-  ];
+  // final List<String> _cities = [
+  //   'Dhaka',
+  //   'Chittagong',
+  //   'Sylhet',
+  //   'Rajshahi',
+  //   'Khulna',
+  // ];
+  // final List<String> _countries = ['Bangladesh', 'India', 'Pakistan', 'Nepal'];
+  // final List<String> _regions = [
+  //   'Dhaka Division',
+  //   'Chittagong Division',
+  //   'Sylhet Division',
+  // ];
 
   @override
   void dispose() {
@@ -56,28 +60,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        leading: Center(
-          child: IconButton(
-            style: IconButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.all(Radius.circular(10)),
-                side: BorderSide(width: 0.4, color: Colors.grey.shade500),
-              ),
-            ),
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => context.pop(),
-          ),
-        ),
-        title: const Text(
-          "Shipping Address",
-          style: TextStyle(color: Colors.black),
-        ),
-        centerTitle: true,
-        actions: [_notificationIcon()],
-      ),
+      appBar: _appBar(context),
       body: Column(
         children: [
           _buildProgressIndicator(),
@@ -122,63 +105,8 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                       controller: _buildingNameController,
                       hint: "Write Balding Name",
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildDropdownField(
-                            label: "City:",
-                            value: _selectedCity,
-                            hint: "Select city",
-                            items: _cities,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedCity = value;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildTextField(
-                            label: "Post Code:",
-                            controller: _postCodeController,
-                            hint: "Select city",
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildDropdownField(
-                            label: "Country:",
-                            value: _selectedCountry,
-                            hint: "Select country",
-                            items: _countries,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedCountry = value;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildDropdownField(
-                            label: "Region / State:",
-                            value: _selectedRegion,
-                            hint: "Select country",
-                            items: _regions,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedRegion = value;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                    _cityWidget(),
+                    _countryWidget(),
                     _buildAddressTypeSelector(),
                     const SizedBox(height: 6),
                     _buildActionButtons(theme),
@@ -190,6 +118,94 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Row _countryWidget() {
+    return Row(
+      spacing: 12,
+      children: [
+        Expanded(
+          child: _buildDropdownField(
+            label: "Country:",
+            value: _selectedCountry,
+            hint: "Select country",
+            items: _countries,
+            onChanged: (value) {
+              setState(() {
+                _selectedCountry = value;
+              });
+            },
+          ),
+        ),
+        Expanded(
+          child: _buildDropdownField(
+            label: "Region / State:",
+            value: _selectedRegion,
+            hint: "Select country",
+            items: _regions,
+            onChanged: (value) {
+              setState(() {
+                _selectedRegion = value;
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row _cityWidget() {
+    return Row(
+      children: [
+        Expanded(
+          child: _buildDropdownField(
+            label: "City:",
+            value: _selectedCity,
+            hint: "Select city",
+            items: _cities,
+            onChanged: (value) {
+              setState(() {
+                _selectedCity = value;
+              });
+            },
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: _buildTextField(
+            label: "Post Code:",
+            controller: _postCodeController,
+            hint: "Select city",
+            keyboardType: TextInputType.number,
+          ),
+        ),
+      ],
+    );
+  }
+
+  AppBar _appBar(BuildContext context) {
+    return AppBar(
+      elevation: 0,
+      backgroundColor: Colors.white,
+      leading: Center(
+        child: IconButton(
+          style: IconButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadiusGeometry.all(Radius.circular(10)),
+              side: BorderSide(width: 0.4, color: Colors.grey.shade500),
+            ),
+          ),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => context.pop(),
+        ),
+      ),
+      title: const Text(
+        "Shipping Address",
+        style: TextStyle(color: Colors.black),
+      ),
+      centerTitle: true,
+      actions: [_notificationIcon()],
     );
   }
 
@@ -492,31 +508,77 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: ElevatedButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                // Handle form submission
+          child: BlocConsumer<AddAddressBloc, AddAddressState>(
+            listener: (context, state) {
+              if (state is AddAddressSuccess) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.message)));
+              } else if (state is AddAddressFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Address saved successfully')),
+                  SnackBar(
+                    content: Text(state.message ?? "Something went wrong"),
+                  ),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              elevation: 0,
-            ),
-            child: const Text(
-              "Continue",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            builder: (context, state) {
+              return ElevatedButton(
+                onPressed: state is AddAddressLoading
+                    ? null
+                    : () {
+                        if (_formKey.currentState?.validate() ?? false) {
+                          context.read<AddAddressBloc>().add(
+                            AddNewAddressEvent(
+                              memberId: 1004,
+                              firstName: _firstNameController.text.trim(),
+                              lastName: _lastNameController.text.trim(),
+                              email: _emailController.text.trim(),
+                              mobileNo: _phoneController.text.trim(),
+                              addressLine1: _streetAddressController.text
+                                  .trim(),
+                              addressLine2: _buildingNameController.text.trim(),
+                              zipCode: _postCodeController.text.trim(),
+                              cityId: _selectedCity ?? "",
+                              countryId: _selectedCountry ?? "",
+                              // : _selectedRegion ?? "",
+                            ),
+                          );
+                        }
+                      },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  elevation: 0,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 8,
+                  children: [
+                    if (state is AddAddressLoading)
+                      const CircularProgressIndicator(
+                        color: Colors.white,
+                        constraints: BoxConstraints(
+                          minHeight: 16,
+                          minWidth: 16,
+                        ),
+                        strokeWidth: 2,
+                      ),
+                    const Text(
+                      "Continue",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ],
