@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shipping_address/src/app_config/app_routes.dart';
 import 'package:shipping_address/src/feature/shopping/bloc/delete_address_bloc/delete_address_bloc.dart';
+import 'package:shipping_address/src/feature/shopping/presentation/add_shipping_address_screen.dart';
 
 import '../../../../model/member_shipping_address_model.dart';
 
@@ -112,7 +115,25 @@ class AddressTileWidget extends StatelessWidget {
                 Expanded(
                   child: TextButton.icon(
                     onPressed: () {
-                      // Edit address
+                      context.pushNamed(
+                        AppRoutesNames.addAddress,
+                        extra: EditShippingAddressPayload(
+                          memberShippingAddressId:
+                              address?.memberShippingAddressId,
+                          memberId: address?.memberId,
+                          phoneCode: address?.phoneCode,
+                          mobileNo: address?.mobileNo,
+                          email: address?.email,
+                          isDefault: address?.isDefault,
+                          firstName: address?.firstName,
+                          lastName: address?.lastName,
+                          addressLine1: address?.addressLine1,
+                          addressLine2: address?.addressLine2,
+                          cityId: address?.cityId,
+                          countryId: address?.countryId,
+                          zipCode: address?.zipCode,
+                        ),
+                      );
                     },
                     icon: const Icon(Icons.edit_outlined, size: 18),
                     label: const Text("Edit"),

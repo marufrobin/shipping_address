@@ -31,7 +31,9 @@ class AppRoutes {
       GoRoute(
         name: AppRoutesNames.addAddress,
         path: AppRoutesNames.addAddress,
-        builder: (context, state) => const AddShippingAddressScreen(),
+        builder: (context, state) => AddShippingAddressScreen(
+          payload: state.extra as EditShippingAddressPayload?,
+        ),
       ),
     ],
   );

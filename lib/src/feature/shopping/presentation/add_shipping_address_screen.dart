@@ -8,8 +8,42 @@ import 'package:shipping_address/src/feature/shopping/bloc/country_bloc/country_
 import 'package:shipping_address/src/model/city_response_model.dart';
 import 'package:shipping_address/src/model/country_response_model.dart';
 
+class EditShippingAddressPayload {
+  final int? memberShippingAddressId;
+  final int? memberId;
+  final String? firstName;
+  final String? lastName;
+  final String? email;
+  final String? mobileNo;
+  final String? phoneCode;
+  final String? addressLine1;
+  final String? addressLine2;
+  final int? cityId;
+  final int? countryId;
+  final String? zipCode;
+  final bool? isDefault;
+
+  EditShippingAddressPayload({
+    this.memberShippingAddressId,
+    this.memberId,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.mobileNo,
+    this.phoneCode,
+    this.addressLine1,
+    this.addressLine2,
+    this.cityId,
+    this.countryId,
+    this.zipCode,
+    this.isDefault,
+  });
+}
+
 class AddShippingAddressScreen extends StatefulWidget {
-  const AddShippingAddressScreen({super.key});
+  final EditShippingAddressPayload? payload;
+
+  const AddShippingAddressScreen({super.key, required this.payload});
 
   @override
   State<AddShippingAddressScreen> createState() =>
@@ -38,7 +72,39 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
   void initState() {
     context.read<CountryBloc>().add(FetchCountryEvent());
     context.read<CityBloc>().add(FetchedCitiesEvent());
+    _editAddress();
     super.initState();
+  }
+
+  _editAddress() {
+    if (widget.payload != null) {
+      final countryState = context.read<CountryBloc>().state;
+      final cityState = context.read<CityBloc>().state;
+
+      _firstNameController.text = widget.payload!.firstName ?? "";
+      _lastNameController.text = widget.payload!.lastName ?? "";
+      _emailController.text = widget.payload!.email ?? "";
+      _phoneController.text = widget.payload!.mobileNo ?? "";
+      _streetAddressController.text = widget.payload!.addressLine1 ?? "";
+      _buildingNameController.text = widget.payload!.addressLine2 ?? "";
+      _postCodeController.text = widget.payload!.zipCode ?? "";
+      // _selectedCityName = cityState is CitySuccess
+      //     ? cityState.cities
+      //           ?.firstWhere(
+      //             (element) => element?.cityId == widget.payload!.cityId,
+      //             orElse: () => null,
+      //           )
+      //           ?.countryName
+      //     : "";
+      // _selectedCountryName = countryState is CountrySuccess
+      //     ? countryState.countries?.data
+      //           ?.firstWhere(
+      //             (element) => element?.countryId == widget.payload!.countryId,
+      //             orElse: () => null,
+      //           )
+      //           ?.countryName
+      //     : "";
+    }
   }
 
   @override
@@ -64,6 +130,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
         onRefresh: () async {
           context.read<CountryBloc>().add(FetchCountryEvent());
           context.read<CityBloc>().add(FetchedCitiesEvent());
+          _editAddress();
         },
         child: Column(
           children: [
