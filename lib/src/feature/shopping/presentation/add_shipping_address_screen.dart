@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shipping_address/src/feature/shopping/bloc/add_address_bloc/add_address_bloc.dart';
+import 'package:shipping_address/src/feature/shopping/bloc/city_bloc/city_bloc.dart';
+import 'package:shipping_address/src/feature/shopping/bloc/country_bloc/country_bloc.dart';
 import 'package:shipping_address/src/model/city_response_model.dart';
 import 'package:shipping_address/src/model/country_response_model.dart';
 
@@ -23,8 +25,11 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
   final _buildingNameController = TextEditingController();
   final _postCodeController = TextEditingController();
 
+  String? _selectedCityName;
   CityModel? _selectedCity;
+  String? _selectedCountryName;
   CountryModel? _selectedCountry;
+  String? _selectedRegionName;
   CountryModel? _selectedRegion;
   bool _useExistingAddress = true;
 
@@ -121,55 +126,95 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
     );
   }
 
-  Row _countryWidget() {
-    return Row(
-      spacing: 12,
-      children: [
-        Expanded(
-          child: _buildDropdownField(
-            label: "Country:",
-            value: _selectedCountry,
-            hint: "Select country",
-            items: _countries,
-            onChanged: (value) {
-              setState(() {
-                _selectedCountry = value;
-              });
-            },
-          ),
-        ),
-        Expanded(
-          child: _buildDropdownField(
-            label: "Region / State:",
-            value: _selectedRegion,
-            hint: "Select country",
-            items: _regions,
-            onChanged: (value) {
-              setState(() {
-                _selectedRegion = value;
-              });
-            },
-          ),
-        ),
-      ],
+  Widget _countryWidget() {
+    return BlocBuilder<CountryBloc, CountryState>(
+      builder: (context, state) {
+        if (state is CountryLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state is CountryFailure) {
+          return Center(child: Text(state.message ?? "Something went wrong"));
+        } else if (state is CountrySuccess) {
+          final countries =
+              state.countries?.data
+                  ?.map((e) => e?.countryName ?? "")
+                  .toList() ??
+              [];
+
+          return Row(
+            spacing: 12,
+            children: [
+              Expanded(
+                child: _buildDropdownField(
+                  label: "Country:",
+                  value: _selectedCountryName,
+                  hint: "Select country",
+                  items: countries,
+                  onChanged: (value) {
+                    final selectedCountry = state.countries?.data?.firstWhere(
+                      (element) => element?.countryName == value,
+                      orElse: () => null,
+                    );
+                    setState(() => _selectedCountry = selectedCountry);
+                  },
+                ),
+              ),
+              Expanded(
+                child: _buildDropdownField(
+                  label: "Region / State:",
+                  value: _selectedRegionName,
+                  hint: "Select country",
+                  items: countries,
+                  onChanged: (value) {
+                    final selectedCountry = state.countries?.data?.firstWhere(
+                      (element) => element?.countryName == value,
+                      orElse: () => null,
+                    );
+                    setState(() => _selectedRegion = selectedCountry);
+                  },
+                ),
+              ),
+            ],
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 
   Row _cityWidget() {
     return Row(
       children: [
-        Expanded(
-          child: _buildDropdownField(
-            label: "City:",
-            value: _selectedCity,
-            hint: "Select city",
-            items: _cities,
-            onChanged: (value) {
-              setState(() {
-                _selectedCity = value;
-              });
-            },
-          ),
+        BlocBuilder<CityBloc, CityState>(
+          builder: (context, state) {
+            if (state is CityLoading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state is CityFailure) {
+              return Center(
+                child: Text(state.message ?? "Something went wrong"),
+              );
+            } else if (state is CitySuccess) {
+              final cities =
+                  state.cities?.map((e) => e?.cityName ?? "").toList() ?? [];
+              return Expanded(
+                child: _buildDropdownField(
+                  label: "City:",
+                  value: _selectedCityName,
+                  hint: "Select city",
+                  items: cities,
+                  onChanged: (value) {
+                    final selectedCity = state.cities?.firstWhere(
+                      (element) => element?.cityName == value,
+                      orElse: () => null,
+                    );
+                    setState(() => _selectedCity = selectedCity);
+                  },
+                ),
+              );
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -514,6 +559,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.message)));
+                context.pop();
               } else if (state is AddAddressFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -539,8 +585,8 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                                   .trim(),
                               addressLine2: _buildingNameController.text.trim(),
                               zipCode: _postCodeController.text.trim(),
-                              cityId: _selectedCity ?? "",
-                              countryId: _selectedCountry ?? "",
+                              cityId: _selectedCity?.cityId,
+                              countryId: _selectedCountry?.countryId,
                               // : _selectedRegion ?? "",
                             ),
                           );
