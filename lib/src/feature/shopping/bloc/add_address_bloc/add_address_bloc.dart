@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../data/add_address_repository.dart';
+import '../../data/repository/add_address_repository.dart';
 
 part 'add_address_event.dart';
 part 'add_address_state.dart';

@@ -1,4 +1,4 @@
-import 'package:shipping_address/src/feature/shopping/data/delete_address_data_provider.dart';
+import 'package:shipping_address/src/feature/shopping/data/data_provider/delete_address_data_provider.dart';
 
 class DeleteAddressRepository {
   final DeleteAddressDataProvider dataProvider;

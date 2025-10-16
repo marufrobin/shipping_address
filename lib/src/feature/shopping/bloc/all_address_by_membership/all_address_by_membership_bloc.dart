@@ -2,8 +2,9 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shipping_address/src/feature/shopping/data/all_address_by_membership_repository.dart';
 import 'package:shipping_address/src/model/member_shipping_address_model.dart';
+
+import '../../data/repository/all_address_by_membership_repository.dart';
 
 part 'all_address_by_membership_event.dart';
 part 'all_address_by_membership_state.dart';

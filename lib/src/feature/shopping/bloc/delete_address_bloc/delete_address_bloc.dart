@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shipping_address/src/feature/shopping/data/delete_address_repository.dart';
+import 'package:shipping_address/src/feature/shopping/data/repository/delete_address_repository.dart';
 
 part 'delete_address_event.dart';
 part 'delete_address_state.dart';

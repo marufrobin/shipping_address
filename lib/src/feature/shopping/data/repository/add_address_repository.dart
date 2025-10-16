@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:shipping_address/src/feature/shopping/data/add_address_data_provider.dart';
+import 'package:shipping_address/src/feature/shopping/data/data_provider/add_address_data_provider.dart';
 
 class AddAddressRepository {
   final AddAddressDataProvider dataProvider;
