@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shipping_address/src/feature/shopping/bloc/all_address_by_membership_bloc.dart';
+import 'package:shipping_address/src/feature/shopping/bloc/all_address_by_membership/all_address_by_membership_bloc.dart';
 
 import '../../../model/member_shipping_address_model.dart';
 
@@ -33,34 +33,34 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
         ),
         actions: [_notificationButton()],
       ),
-      body:
-          BlocBuilder<AllAddressByMembershipBloc, AllAddressByMembershipState>(
-            builder: (context, state) {
-              if (state is AllAddressByMembershipLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is AllAddressByMembershipFailure) {
-                return _errorWidget(state, context);
-              } else if (state is AllAddressByMembershipSuccess) {
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<AllAddressByMembershipBloc>().add(
-                      FetchAllAddressByMembershipEvent(memberShipId: "1004"),
-                    );
-                  },
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: _body(state.allAddress),
-                  ),
+      body: BlocBuilder<AllAddressByMembershipBloc, AllAddressByMembershipState>(
+        // BlocBuilder<AllAddressByMembershipBloc, AllAddressByMembershipState>(
+        builder: (context, state) {
+          if (state is AllAddressByMembershipLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is AllAddressByMembershipFailure) {
+            return _errorWidget(state, context);
+          } else if (state is AllAddressByMembershipSuccess) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<AllAddressByMembershipBloc>().add(
+                  FetchAllAddressByMembershipEvent(memberShipId: "1004"),
                 );
-              }
-              return const Center(
-                child: Text(
-                  "Loading addresses...",
-                  style: TextStyle(color: Colors.black54),
-                ),
-              );
-            },
-          ),
+              },
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: _body(state.allAddress),
+              ),
+            );
+          }
+          return const Center(
+            child: Text(
+              "Loading addresses...",
+              style: TextStyle(color: Colors.black54),
+            ),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // Navigate to add new address screen
@@ -309,7 +309,7 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text("Delete Address"),
         content: Text(
-          "Are you sure you want to delete this address?\n\n${address?.addressLine1}",
+          "Are you sure you want to delete this address?\n\n${address?.addressLine1 ?? ''}, ${address?.addressLine2 ?? ''}",
         ),
         actions: [
           TextButton(

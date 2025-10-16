@@ -24,7 +24,4 @@ final class AllAddressByMembershipFailure extends AllAddressByMembershipState {
   final String? message;
 
   const AllAddressByMembershipFailure({this.message});
-
-  @override
-  List<Object?> get props => [message];
 }

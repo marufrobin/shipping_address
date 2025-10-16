@@ -14,14 +14,7 @@ class AllAddressByMembershipDataProvider {
       final response = await _httpService.dio.get(
         '${AppUrls.getAllAddressByMembership}$membershipId',
       );
-      // if (response.statusCode == 200) {
-      //   final List<dynamic> data = response.data;
-      //   return data
-      //       .map((json) => MemberShippingAddressModel.fromJson(json))
-      //       .toList();
-      // } else {
-      //   throw Exception('Failed to load addresses');
-      // }
+  
       log(name: "Get all address data response", response.toString());
       return response;
     } catch (e) {

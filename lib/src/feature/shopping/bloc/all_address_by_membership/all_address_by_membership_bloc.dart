@@ -15,9 +15,6 @@ class AllAddressByMembershipBloc
   AllAddressByMembershipBloc(this.repository)
     : super(AllAddressByMembershipInitial()) {
     on<FetchAllAddressByMembershipEvent>(_fetchAllAddressByMembership);
-    // on<FetchAllAddressByMembershipEvent>((event, emit) {
-    //
-    // },);
   }
 
   _fetchAllAddressByMembership(
