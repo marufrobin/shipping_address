@@ -14,10 +14,8 @@ class RootApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: AppBlocProviderResolver.repositoriesProviders,
-      // providers: [],
       child: MultiBlocProvider(
         providers: AppBlocProviderResolver.blocProviders,
-        // providers: [],
         child: MaterialApp.router(
           title: 'Shopping Address demo',
           debugShowCheckedModeBanner: false,
