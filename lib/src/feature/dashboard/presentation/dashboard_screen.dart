@@ -54,7 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               CustomBottomBarItems(
                 label: 'Category',
-                icon: Icons.category_outlined,
+                icon: Icons.grid_view_outlined,
                 // assetsImagePath: accountImage,
                 isAssetsImage: false,
               ),
@@ -66,7 +66,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
               CustomBottomBarItems(
                 label: 'Account',
-                icon: Icons.person_2_outlined,
+                icon: Icons.person_outline,
                 // assetsImagePath: accountImage,
                 isAssetsImage: false,
               ),
