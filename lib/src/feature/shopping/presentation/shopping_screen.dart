@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shipping_address/src/app_config/app_routes.dart';
 import 'package:shipping_address/src/feature/shopping/bloc/all_address_by_membership/all_address_by_membership_bloc.dart';
+import 'package:shipping_address/src/feature/shopping/bloc/delete_address_bloc/delete_address_bloc.dart';
 import 'package:shipping_address/src/feature/shopping/presentation/widgets/address_tile_widget.dart';
 
+import '../../../app_config/app_routes.dart';
 import '../../../model/member_shipping_address_model.dart';
 
 class ShoppingScreen extends StatefulWidget {
@@ -29,34 +30,57 @@ class _ShoppingScreenState extends State<ShoppingScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: _appbar(),
-      body:
-          BlocBuilder<AllAddressByMembershipBloc, AllAddressByMembershipState>(
-            builder: (context, state) {
-              if (state is AllAddressByMembershipLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (state is AllAddressByMembershipFailure) {
-                return _errorWidget(state, context);
-              } else if (state is AllAddressByMembershipSuccess) {
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    context.read<AllAddressByMembershipBloc>().add(
-                      FetchAllAddressByMembershipEvent(memberShipId: "1004"),
-                    );
-                  },
-                  child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
-                    child: _body(state.allAddress),
+      body: BlocListener<DeleteAddressBloc, DeleteAddressState>(
+        listener: (context, state) {
+          if (state is DeleteAddressFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Something went wrong")),
+            );
+          } else if (state is DeleteAddressSuccess) {
+            context.read<AllAddressByMembershipBloc>().add(
+              FetchAllAddressByMembershipEvent(memberShipId: "1004"),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Address deleted successfully")),
+            );
+          } else if (state is DeleteAddressLoading) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Deleting address...")),
+            );
+          }
+        },
+        child:
+            BlocBuilder<
+              AllAddressByMembershipBloc,
+              AllAddressByMembershipState
+            >(
+              builder: (context, state) {
+                if (state is AllAddressByMembershipLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is AllAddressByMembershipFailure) {
+                  return _errorWidget(state, context);
+                } else if (state is AllAddressByMembershipSuccess) {
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      context.read<AllAddressByMembershipBloc>().add(
+                        FetchAllAddressByMembershipEvent(memberShipId: "1004"),
+                      );
+                    },
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: _body(state.allAddress),
+                    ),
+                  );
+                }
+                return const Center(
+                  child: Text(
+                    "Loading addresses...",
+                    style: TextStyle(color: Colors.black54),
                   ),
                 );
-              }
-              return const Center(
-                child: Text(
-                  "Loading addresses...",
-                  style: TextStyle(color: Colors.black54),
-                ),
-              );
-            },
-          ),
+              },
+            ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           context.pushNamed(AppRoutesNames.addAddress);

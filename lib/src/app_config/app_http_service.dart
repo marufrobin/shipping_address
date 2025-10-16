@@ -5,8 +5,8 @@ class AppHttpService {
   AppHttpService() {
     final option = BaseOptions(
       baseUrl: AppUrls.baseUrl,
-      connectTimeout: const Duration(seconds: 40),
-      receiveTimeout: const Duration(seconds: 40),
+      connectTimeout: const Duration(minutes: 5),
+      receiveTimeout: const Duration(minutes: 5),
     );
     _dio = Dio(option);
   }

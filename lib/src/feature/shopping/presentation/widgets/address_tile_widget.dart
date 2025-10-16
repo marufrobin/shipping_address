@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shipping_address/src/feature/shopping/bloc/delete_address_bloc/delete_address_bloc.dart';
 
 import '../../../../model/member_shipping_address_model.dart';
 
@@ -22,148 +24,124 @@ class AddressTileWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {
-            // Handle address selection
-          },
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
-                        borderRadius: BorderRadius.circular(12),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(Icons.location_on, color: Colors.blue, size: 24),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${address?.firstName ?? ''} ${address?.lastName ?? ''}"
+                            .trim(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
                       ),
-                      child: Icon(
-                        Icons.location_on,
-                        color: Colors.blue,
-                        size: 24,
+                      const SizedBox(height: 2),
+                      Text(
+                        address?.city?.cityName ?? 'City',
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
                       ),
+                    ],
+                  ),
+                ),
+                if (address?.isDefault == true)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${address?.firstName ?? ''} ${address?.lastName ?? ''}"
-                                .trim(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black,
-                            ),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.green.shade200),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.check_circle, size: 14, color: Colors.green),
+                        const SizedBox(width: 4),
+                        Text(
+                          "Default",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.green,
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            address?.city?.cityName ?? 'City',
-                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    if (address?.isDefault == true)
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.green.shade50,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.green.shade200),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.check_circle,
-                              size: 14,
-                              color: Colors.green,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              "Default",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                _addressDetailRow(
-                  Icons.home_outlined,
-                  "${address?.addressLine1 ?? ''}, ${address?.addressLine2 ?? ''}",
-                ),
-                const SizedBox(height: 8),
-                _addressDetailRow(
-                  Icons.location_city_outlined,
-                  "${address?.city?.cityName ?? ''}, ${address?.country?.countryName ?? ''}",
-                ),
-                const SizedBox(height: 8),
-                _addressDetailRow(
-                  Icons.mail_outline,
-                  address?.zipCode ?? 'N/A',
-                ),
-                const SizedBox(height: 8),
-                _addressDetailRow(
-                  Icons.phone_outlined,
-                  address?.mobileNo ?? '',
-                ),
-                const SizedBox(height: 16),
-                const Divider(height: 1),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton.icon(
-                        onPressed: () {
-                          // Edit address
-                        },
-                        icon: const Icon(Icons.edit_outlined, size: 18),
-                        label: const Text("Edit"),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.blue,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                        ),
-                      ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            _addressDetailRow(
+              Icons.home_outlined,
+              "${address?.addressLine1 ?? ''}, ${address?.addressLine2 ?? ''}",
+            ),
+            const SizedBox(height: 8),
+            _addressDetailRow(
+              Icons.location_city_outlined,
+              "${address?.city?.cityName ?? ''}, ${address?.country?.countryName ?? ''}",
+            ),
+            const SizedBox(height: 8),
+            _addressDetailRow(Icons.mail_outline, address?.zipCode ?? 'N/A'),
+            const SizedBox(height: 8),
+            _addressDetailRow(Icons.phone_outlined, address?.mobileNo ?? ''),
+            const SizedBox(height: 16),
+            const Divider(height: 1),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      // Edit address
+                    },
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    label: const Text("Edit"),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
-                    Container(width: 1, height: 24, color: Colors.grey[300]),
-                    Expanded(
-                      child: TextButton.icon(
-                        onPressed: () {
-                          // Delete address
-                          _showDeleteConfirmation(
-                            context: context,
-                            address: address,
-                          );
-                        },
-                        icon: const Icon(Icons.delete_outline, size: 18),
-                        label: const Text("Delete"),
-                        style: TextButton.styleFrom(
-                          foregroundColor: Colors.red,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                        ),
-                      ),
+                  ),
+                ),
+                Container(width: 1, height: 24, color: Colors.grey[300]),
+                Expanded(
+                  child: TextButton.icon(
+                    onPressed: () {
+                      _showDeleteConfirmation(
+                        context: context,
+                        address: address,
+                      );
+                    },
+                    icon: const Icon(Icons.delete_outline, size: 18),
+                    label: const Text("Delete"),
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -207,7 +185,12 @@ class AddressTileWidget extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              // Delete address logic
+              context.read<DeleteAddressBloc>().add(
+                ExecuteDeleteAddressEvent(
+                  addressId: address?.memberShippingAddressId,
+                  memberId: address?.memberId,
+                ),
+              );
               Navigator.pop(context);
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),

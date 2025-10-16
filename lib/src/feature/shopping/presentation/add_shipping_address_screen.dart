@@ -88,45 +88,40 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                 key: _formKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 16,
                   children: [
                     _buildTextField(
                       label: "First Name:",
                       controller: _firstNameController,
                       hint: "Andru",
                     ),
-                    const SizedBox(height: 16),
                     _buildTextField(
                       label: "Last Name:",
                       controller: _lastNameController,
                       hint: "Thomas",
                     ),
-                    const SizedBox(height: 16),
                     _buildTextField(
                       label: "Email Address:",
                       controller: _emailController,
                       hint: "info@andruthomas@mail.com",
                       keyboardType: TextInputType.emailAddress,
                     ),
-                    const SizedBox(height: 16),
                     _buildTextField(
                       label: "Phone Number:",
                       controller: _phoneController,
                       hint: "+ 971 055 4836",
                       keyboardType: TextInputType.phone,
                     ),
-                    const SizedBox(height: 16),
                     _buildTextField(
                       label: "Street Address:",
                       controller: _streetAddressController,
                       hint: "Write Address",
                     ),
-                    const SizedBox(height: 16),
                     _buildTextField(
                       label: "Building Name:",
                       controller: _buildingNameController,
                       hint: "Write Balding Name",
                     ),
-                    const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
@@ -153,7 +148,6 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
@@ -185,9 +179,8 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
                     _buildAddressTypeSelector(),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 6),
                     _buildActionButtons(theme),
                     const SizedBox(height: 20),
                   ],
@@ -237,14 +230,14 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
           ),
           _buildProgressLine(isCompleted: true),
           _buildProgressStep(
-            icon: Icons.remove_red_eye_outlined,
+            icon: Icons.location_on_outlined,
             label: "Shipping Address",
             isCompleted: false,
             isActive: true,
           ),
           _buildProgressLine(isCompleted: false),
           _buildProgressStep(
-            icon: Icons.account_balance_wallet_outlined,
+            icon: Icons.money_outlined,
             label: "Payment",
             isCompleted: false,
             isActive: false,
@@ -267,7 +260,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
           height: 56,
           decoration: BoxDecoration(
             color: isCompleted || isActive
-                ? Color(0xFFB8926C)
+                ? Theme.of(context).primaryColor
                 : Colors.grey.shade300,
             shape: BoxShape.circle,
           ),
@@ -295,7 +288,9 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
       child: Container(
         height: 2,
         margin: const EdgeInsets.only(bottom: 30),
-        color: isCompleted ? Color(0xFFB8926C) : Colors.grey.shade300,
+        color: isCompleted
+            ? Theme.of(context).primaryColor
+            : Colors.grey.shade300,
       ),
     );
   }
@@ -404,6 +399,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
 
   Widget _buildAddressTypeSelector() {
     return Row(
+      spacing: 10,
       children: [
         Expanded(
           child: _buildRadioOption(
@@ -417,7 +413,6 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
             },
           ),
         ),
-        const SizedBox(width: 12),
         Expanded(
           child: _buildRadioOption(
             icon: Icons.radio_button_unchecked,
@@ -442,27 +437,32 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
   }) {
     return InkWell(
       onTap: onTap,
-      child: Row(
-        children: [
-          Icon(
-            isSelected
-                ? Icons.radio_button_checked
-                : Icons.radio_button_unchecked,
-            color: isSelected ? Color(0xFFB8926C) : Colors.grey.shade400,
-            size: 20,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                color: isSelected ? Colors.black87 : Colors.grey.shade600,
-                fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          spacing: 8,
+          children: [
+            Icon(
+              isSelected
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : Colors.grey.shade400,
+              size: 20,
+            ),
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: isSelected ? Colors.black87 : Colors.grey.shade600,
+                  fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -483,7 +483,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
             child: const Text(
               "Back",
               style: TextStyle(
-                color: Colors.black87,
+                color: Colors.black,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -502,7 +502,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFFB8926C),
+              backgroundColor: Theme.of(context).primaryColor,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

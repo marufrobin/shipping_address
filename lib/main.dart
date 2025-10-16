@@ -29,7 +29,11 @@ class RootApp extends StatelessWidget {
 
   ThemeData _theme() {
     return ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffB47B42),secondary: const Color(0xffFFF8F3),onSurface: const Color(0xff4A3C31),),
-        );
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xffa77d44),
+        secondary: const Color(0xffFFF8F3),
+        // onSurface: const Color(0xff4A3C31),
+      ),
+    );
   }
 }
