@@ -20,6 +20,7 @@ class RootApp extends StatelessWidget {
         // providers: [],
         child: MaterialApp.router(
           title: 'Shopping Address demo',
+          debugShowCheckedModeBanner: false,
           theme: _theme(),
           routerConfig: AppRoutes.appRoutes,
         ),
