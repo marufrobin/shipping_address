@@ -648,6 +648,30 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                     ? null
                     : () {
                         if (_formKey.currentState?.validate() ?? false) {
+                          if (widget.payload != null) {
+                            context.read<AddAddressBloc>().add(
+                              EditAddressEvent(
+                                memberShippingAddressId: 0,
+                                memberId: 1004,
+                                firstName: _firstNameController.text.trim(),
+                                lastName: _lastNameController.text.trim(),
+                                email: _emailController.text.trim(),
+                                phoneCode: "+971",
+                                isDefault: true,
+                                mobileNo: _phoneController.text.trim(),
+                                addressLine1: _streetAddressController.text
+                                    .trim(),
+                                addressLine2: _buildingNameController.text
+                                    .trim(),
+                                zipCode: _postCodeController.text.trim(),
+                                cityId: _selectedCity?.cityId,
+                                countryId: _selectedCountry?.countryId,
+                                // : _selectedRegion ?? "",
+                              ),
+                            );
+                          }
+
+                          /// New Address added
                           context.read<AddAddressBloc>().add(
                             AddNewAddressEvent(
                               memberShippingAddressId: 0,

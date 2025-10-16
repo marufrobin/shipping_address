@@ -11,6 +11,7 @@ class AddAddressBloc extends Bloc<AddAddressEvent, AddAddressState> {
 
   AddAddressBloc(this.repository) : super(AddAddressInitial()) {
     on<AddNewAddressEvent>(_onSubmitAddress);
+    on<EditAddressEvent>(_onEditAddress);
   }
 
   _onSubmitAddress(
@@ -21,6 +22,39 @@ class AddAddressBloc extends Bloc<AddAddressEvent, AddAddressState> {
       emit(AddAddressLoading());
 
       final result = await repository.addAddress(
+        memberShippingAddressId: 0,
+        memberId: 1004,
+        firstName: event.firstName,
+        lastName: event.lastName,
+        email: event.email,
+        mobileNo: event.mobileNo,
+        phoneCode: event.phoneCode,
+        addressLine1: event.addressLine1,
+        addressLine2: event.addressLine2,
+        cityId: event.cityId,
+        countryId: event.countryId,
+        zipCode: event.zipCode,
+        isDefault: event.isDefault,
+      );
+
+      final message = result['message'] ?? 'Unknown response.';
+      final success = result['success'] == true;
+
+      if (success) {
+        emit(AddAddressSuccess(message, id: result["id"]));
+      } else {
+        emit(AddAddressFailure(message));
+      }
+    } catch (e) {
+      emit(AddAddressFailure(e.toString()));
+    }
+  }
+
+  _onEditAddress(EditAddressEvent event, Emitter<AddAddressState> emit) async {
+    try {
+      emit(AddAddressLoading());
+
+      final result = await repository.editAddress(
         memberShippingAddressId: 0,
         memberId: 1004,
         firstName: event.firstName,
