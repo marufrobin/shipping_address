@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shipping_address/src/feature/shopping/bloc/add_address_bloc/add_address_bloc.dart';
+import 'package:shipping_address/src/feature/shopping/bloc/all_address_by_membership/all_address_by_membership_bloc.dart';
 import 'package:shipping_address/src/feature/shopping/bloc/city_bloc/city_bloc.dart';
 import 'package:shipping_address/src/feature/shopping/bloc/country_bloc/country_bloc.dart';
 import 'package:shipping_address/src/model/city_response_model.dart';
@@ -183,6 +184,7 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
 
   Row _cityWidget() {
     return Row(
+      spacing: 12,
       children: [
         BlocBuilder<CityBloc, CityState>(
           builder: (context, state) {
@@ -215,7 +217,6 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
             }
           },
         ),
-        const SizedBox(width: 12),
         Expanded(
           child: _buildTextField(
             label: "Post Code:",
@@ -423,7 +424,8 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
-          value: value,
+          initialValue: value,
+          isExpanded: true,
           hint: Text(
             hint,
             style: TextStyle(color: Colors.grey.shade400, fontSize: 14),
@@ -441,10 +443,13 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFB8926C), width: 2),
+              borderSide: BorderSide(
+                color: Theme.of(context).primaryColor,
+                width: 2,
+              ),
             ),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
+              horizontal: 8,
               vertical: 14,
             ),
           ),
@@ -558,6 +563,9 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                 ScaffoldMessenger.of(
                   context,
                 ).showSnackBar(SnackBar(content: Text(state.message)));
+                context.read<AllAddressByMembershipBloc>().add(
+                  FetchAllAddressByMembershipEvent(memberShipId: "1004"),
+                );
                 context.pop();
               } else if (state is AddAddressFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -575,10 +583,13 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
                         if (_formKey.currentState?.validate() ?? false) {
                           context.read<AddAddressBloc>().add(
                             AddNewAddressEvent(
+                              memberShippingAddressId: 0,
                               memberId: 1004,
                               firstName: _firstNameController.text.trim(),
                               lastName: _lastNameController.text.trim(),
                               email: _emailController.text.trim(),
+                              phoneCode: "+971",
+                              isDefault: true,
                               mobileNo: _phoneController.text.trim(),
                               addressLine1: _streetAddressController.text
                                   .trim(),
