@@ -11,6 +11,7 @@ class CityRepository {
   Future<List<CityModel?>?> getCities() async {
     try {
       final response = await dataProvider.getCityData();
+      log(name: "response", response.toString());
 
       List<CityModel?>? result = [];
 

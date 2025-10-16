@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:shipping_address/src/app_config/app_http_service.dart';
 import 'package:shipping_address/src/app_config/app_urls.dart';
@@ -36,6 +38,8 @@ class AddAddressDataProvider {
         "zipCode": zipCode,
         "isDefault": isDefault,
       };
+
+      log(body.toString(), name: "Address body");
 
       final response = await _appHttpService.dio.post(
         AppUrls.addAddress,

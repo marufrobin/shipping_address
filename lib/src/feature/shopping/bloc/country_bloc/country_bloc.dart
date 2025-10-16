@@ -19,6 +19,7 @@ class CountryBloc extends Bloc<CountryEvent, CountryState> {
       emit(CountryLoading());
 
       final countries = await repository.getCountries();
+      print(countries);
       emit(CountrySuccess(countries));
     } catch (e) {
       emit(CountryFailure(e.toString()));

@@ -11,6 +11,7 @@ class CountryRepository {
   Future<CountryResponseModel?> getCountries() async {
     try {
       final response = await dataProvider.getCountries();
+      log(name: "Country Repository", response.toString());
 
       final data = CountryResponseModel.fromJson(response?.data);
       log(name: "Country Repository", data.toString());

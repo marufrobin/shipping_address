@@ -33,19 +33,12 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
   CountryModel? _selectedRegion;
   bool _useExistingAddress = true;
 
-  // final List<String> _cities = [
-  //   'Dhaka',
-  //   'Chittagong',
-  //   'Sylhet',
-  //   'Rajshahi',
-  //   'Khulna',
-  // ];
-  // final List<String> _countries = ['Bangladesh', 'India', 'Pakistan', 'Nepal'];
-  // final List<String> _regions = [
-  //   'Dhaka Division',
-  //   'Chittagong Division',
-  //   'Sylhet Division',
-  // ];
+  @override
+  void initState() {
+    context.read<CountryBloc>().add(FetchCountryEvent());
+    context.read<CityBloc>().add(FetchedCitiesEvent());
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -66,62 +59,68 @@ class _AddShippingAddressScreenState extends State<AddShippingAddressScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _appBar(context),
-      body: Column(
-        children: [
-          _buildProgressIndicator(),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  spacing: 16,
-                  children: [
-                    _buildTextField(
-                      label: "First Name:",
-                      controller: _firstNameController,
-                      hint: "Andru",
-                    ),
-                    _buildTextField(
-                      label: "Last Name:",
-                      controller: _lastNameController,
-                      hint: "Thomas",
-                    ),
-                    _buildTextField(
-                      label: "Email Address:",
-                      controller: _emailController,
-                      hint: "info@andruthomas@mail.com",
-                      keyboardType: TextInputType.emailAddress,
-                    ),
-                    _buildTextField(
-                      label: "Phone Number:",
-                      controller: _phoneController,
-                      hint: "+ 971 055 4836",
-                      keyboardType: TextInputType.phone,
-                    ),
-                    _buildTextField(
-                      label: "Street Address:",
-                      controller: _streetAddressController,
-                      hint: "Write Address",
-                    ),
-                    _buildTextField(
-                      label: "Building Name:",
-                      controller: _buildingNameController,
-                      hint: "Write Balding Name",
-                    ),
-                    _cityWidget(),
-                    _countryWidget(),
-                    _buildAddressTypeSelector(),
-                    const SizedBox(height: 6),
-                    _buildActionButtons(theme),
-                    const SizedBox(height: 20),
-                  ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.read<CountryBloc>().add(FetchCountryEvent());
+          context.read<CityBloc>().add(FetchedCitiesEvent());
+        },
+        child: Column(
+          children: [
+            _buildProgressIndicator(),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 16,
+                    children: [
+                      _buildTextField(
+                        label: "First Name:",
+                        controller: _firstNameController,
+                        hint: "Andru",
+                      ),
+                      _buildTextField(
+                        label: "Last Name:",
+                        controller: _lastNameController,
+                        hint: "Thomas",
+                      ),
+                      _buildTextField(
+                        label: "Email Address:",
+                        controller: _emailController,
+                        hint: "info@andruthomas@mail.com",
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      _buildTextField(
+                        label: "Phone Number:",
+                        controller: _phoneController,
+                        hint: "+ 971 055 4836",
+                        keyboardType: TextInputType.phone,
+                      ),
+                      _buildTextField(
+                        label: "Street Address:",
+                        controller: _streetAddressController,
+                        hint: "Write Address",
+                      ),
+                      _buildTextField(
+                        label: "Building Name:",
+                        controller: _buildingNameController,
+                        hint: "Write Balding Name",
+                      ),
+                      _cityWidget(),
+                      _countryWidget(),
+                      _buildAddressTypeSelector(),
+                      const SizedBox(height: 6),
+                      _buildActionButtons(theme),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -10,7 +10,7 @@ class CountryDataProvider {
   Future<Response?> getCountries() async {
     try {
       final response = await _appHttpService.dio.get(AppUrls.getAllCountries);
-      log(name: "getCountries", response.data);
+      log(name: "getCountries", response.data.toString());
 
       return response;
     } catch (e) {

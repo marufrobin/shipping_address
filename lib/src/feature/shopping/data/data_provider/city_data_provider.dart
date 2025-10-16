@@ -10,7 +10,8 @@ class CityDataProvider {
   Future<Response?> getCityData() async {
     try {
       final response = await _httpService.dio.get(AppUrls.getAllCities);
-      log(name: "CityDataProvider", response.data);
+      log(name: "CityDataProvider", response.data.toString());
+
       return response;
     } catch (e) {
       if (e is DioException) {
