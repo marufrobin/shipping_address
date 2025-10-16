@@ -33,7 +33,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return BlocBuilder<DashBoardBottomNavIndexCubit, int>(
       builder: (context, state) {
         return Scaffold(
-          body: _screens[state],
+          body: Center(child: _screens[state]),
           bottomNavigationBar: CustomLineIndicatorBottomNavbar(
             selectedColor: theme.colorScheme.primary,
             unSelectedColor: theme.colorScheme.onSurface.withValues(alpha: 0.6),

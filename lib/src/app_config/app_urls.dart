@@ -3,21 +3,20 @@ class AppUrls {
 
   /// /{membershipId}
   static final String getAllAddressByMembership =
-      "$baseUrl/api/membershipAddress/GetByMember/";
+      "/api/membershipAddress/GetByMember/";
   static final String getDefaultAddress =
-      "$baseUrl/api/membershipAddress/GetByMemberDefault/";
-  static final String addAddress = "$baseUrl/api/membershipAddress/Add";
+      "/api/membershipAddress/GetByMemberDefault/";
+  static final String addAddress = "/api/membershipAddress/Add";
 
   /// PUT -> /$id
-  static final String editAddress = "$baseUrl/api/membershipAddress/Edit/";
+  static final String editAddress = "/api/membershipAddress/Edit/";
 
   /// DELETE -> /api/membershipAddress/delete/{id}/{memberId} (DELETE)
-  static final String deleteAddress = "$baseUrl/api/membershipAddress/delete/";
+  static final String deleteAddress = "/api/membershipAddress/delete/";
 
   /// GET
-  static final String getAllCountries = "$baseUrl/api/countries/all";
-  static final String getAllCities = "$baseUrl/api/cities/GetAll";
-  static final String getCitiesByCountry =
-      "$baseUrl/api/cities/GetAllByCountry";
-  static final String getCityById = "$baseUrl/api/cities/GetById";
+  static final String getAllCountries = "/api/countries/all";
+  static final String getAllCities = "/api/cities/GetAll";
+  static final String getCitiesByCountry = "/api/cities/GetAllByCountry";
+  static final String getCityById = "/api/cities/GetById";
 }
